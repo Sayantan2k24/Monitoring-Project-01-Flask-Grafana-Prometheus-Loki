@@ -1,0 +1,21 @@
+docker run -d -p 3000:3000 --name=grafana grafana/grafana-oss
+
+DashBoards Panel Queries and details
+
+
+Total Requests
+sum(app_requests_total)
+Gauge
+
+Requests Average Duration
+app_request_latency_seconds_sum / app_request_latency_seconds_count
+bar Gaurge
+
+Requests Count
+sum by (endpoint) (app_request_latency_seconds_count)
+Gauge
+
+
+Requests Per Second
+rate(app_request_latency_seconds_count[1m])
+gauge
