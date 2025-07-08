@@ -1,34 +1,33 @@
+# ✅ Use official Ubuntu base image
 FROM ubuntu:22.04
 
-# Install required tools
-RUN apt-get update && apt-get install -y wget curl unzip ca-certificates && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-
 # Set environment variables
-ENV LOKI_VERSION=2.9.2
+ENV LOKI_DIR=/opt/loki \
+    LOKI_CONFIG=/opt/loki/loki-config.yaml
 
-# Create a user and working directories
-RUN useradd --no-create-home --shell /bin/false loki && \
-    mkdir -p /etc/loki /data/loki
+# Create working directory
+WORKDIR /opt/loki
 
-# Download Loki binary and move to /usr/local/bin
-RUN wget https://github.com/grafana/loki/releases/download/v${LOKI_VERSION}/loki-linux-amd64.zip && \
-    unzip loki-linux-amd64.zip && \
-    mv loki-linux-amd64 /usr/local/bin/loki && \
-    chmod +x /usr/local/bin/loki && \
-    rm loki-linux-amd64.zip
+# 🧰 Install necessary packages: curl, wget, unzip
+RUN apt update && \
+    apt install -y curl wget unzip && \
+    rm -rf /var/lib/apt/lists/*
 
-# Copy default config (you can override this via volume)
-COPY loki-config.yaml /etc/loki/config.yaml
-
-# Set ownership
-RUN chown -R loki:loki /etc/loki /data/loki
+# Fetch latest Loki version
+RUN LOKI_VERSION=$(curl -s "https://api.github.com/repos/grafana/loki/releases/latest" | grep -Po '"tag_name": "v\K[0-9.]+' || echo "2.9.2") && \
+    wget -qO loki.zip "https://github.com/grafana/loki/releases/download/v${LOKI_VERSION}/loki-linux-amd64.zip" && \
+    unzip -o loki.zip && \
+    mv loki-linux-amd64 loki && \
+    chmod +x loki && \
+    ln -s /opt/loki/loki /usr/local/bin/loki && \
+    # download the loki config file
+    wget -qO loki-config.yaml "https://raw.githubusercontent.com/grafana/loki/v${LOKI_VERSION}/cmd/loki/loki-local-config.yaml" && \
+    # Remove deprecated config key (may cause crash on newer versions)
+    sed -i '/enable_multi_variant_queries/d' loki-config.yaml && \
+    rm -f loki.zip
 
 # Expose Loki port
 EXPOSE 3100
 
-# Run as non-root
-USER loki
-
-# Start Loki
-ENTRYPOINT ["/usr/local/bin/loki", "-config.file=/etc/loki/config.yaml"]
+# Start Loki with config
+CMD ["loki", "-config.file=/opt/loki/loki-config.yaml"]
