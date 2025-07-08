@@ -1,0 +1,69 @@
+version: "3.8"
+
+networks:
+  microservice_monitoring_stack:
+    driver: bridge
+
+volumes:
+  grafana_data:
+
+services:
+  flask-app:
+    container_name: flask-metrics-logger
+    build:
+      context: ./microservice
+      dockerfile: Dockerfile
+    image: sayantan2k21/flask-metrics-logger:v1
+    ports:
+      - "5000:5000"
+    networks:
+      - microservice_monitoring_stack
+    environment:
+      - PORT=5000
+    restart: unless-stopped
+    depends_on:
+      - loki-server
+      - prom-server
+
+  prom-server:
+    container_name: prometheus-server
+    build:
+      context: ./prometheus
+      dockerfile: Dockerfile
+    image: sayantan2k21/custom-prometheus-server:ubuntu-v1
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - microservice_monitoring_stack
+    restart: unless-stopped
+
+  grafana-server:
+    container_name: grafana-server
+    build:
+      context: ./grafana
+      dockerfile: Dockerfile
+    image: sayantan2k21/custom-grafana-server:ubuntu-v1
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - microservice_monitoring_stack
+    restart: unless-stopped
+    depends_on:
+      - prom-server
+      - loki-server
+
+  loki-server:
+    container_name: loki-server
+    build:
+      context: ./loki
+      dockerfile: Dockerfile
+    image: sayantan2k21/custom-loki-server:ubuntu-v1
+    ports:
+      - "3100:3100"
+    networks:
+      - microservice_monitoring_stack
+    restart: unless-stopped
