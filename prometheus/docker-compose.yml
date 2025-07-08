@@ -1,5 +1,9 @@
 version: "3.8"
 
+networks:
+  microservice_monitoring_stack:
+    external: true
+
 services:
   prom-server:
     container_name: prometheus-server
