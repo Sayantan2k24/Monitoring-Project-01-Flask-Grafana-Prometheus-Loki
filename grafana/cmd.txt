@@ -1,7 +1,6 @@
-docker run -d -p 3000:3000 --name=grafana grafana/grafana-oss
+# docker run -d -p 3000:3000 --name=grafana grafana/grafana-oss
 
 DashBoards Panel Queries and details
-
 
 Total Requests
 sum(app_requests_total)

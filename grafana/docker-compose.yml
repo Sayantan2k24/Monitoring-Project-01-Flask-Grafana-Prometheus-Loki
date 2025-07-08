@@ -1,0 +1,25 @@
+version: "3.8"
+
+networks:
+  microservice_monitoring_stack:
+    external: true
+    
+services:
+  grafana-server:
+    container_name: grafana-server
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sayantan2k21/custom-grafana-server:ubuntu-v1
+    ports:
+      - "3000:3000"
+    networks:
+      - microservice_monitoring_stack
+    volumes:
+      - grafana_data:/var/lib/grafana
+    restart: unless-stopped
+
+volumes:
+  grafana_data:
+
+
