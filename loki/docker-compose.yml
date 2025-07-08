@@ -10,8 +10,6 @@ services:
       - "3100:3100"
     networks:
       - microservice_monitoring_stack
-    volumes:
-      - ./loki-config.yaml:/etc/loki/config.yaml
     restart: unless-stopped
 
 networks:
