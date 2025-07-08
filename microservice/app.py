@@ -8,7 +8,7 @@ import time
 
 
 # Loki URL (adjust host & port as per your Loki setup)
-LOKI_URL = "http://loki-server:3100"
+LOKI_URL = "http://loki-server:3100/loki/api/v1/push"
 
 # Set up a logger
 logger = logging.getLogger("flask-loki-logger")
