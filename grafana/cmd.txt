@@ -8,7 +8,7 @@ Gauge
 
 Requests Average Duration
 app_request_latency_seconds_sum / app_request_latency_seconds_count
-bar Gaurge
+Time Series or Gauge
 
 Requests Count
 sum by (endpoint) (app_request_latency_seconds_count)
@@ -16,5 +16,5 @@ Gauge
 
 
 Requests Per Second
-rate(app_request_latency_seconds_count[1m])
+rate(app_request_latency_seconds_count[5m])
 gauge
