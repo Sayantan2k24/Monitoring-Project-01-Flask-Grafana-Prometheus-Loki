@@ -87,3 +87,14 @@ def slow():
         REQUEST_LATENCY.labels(endpoint="/slow", app="flask-metrics-logger").observe(duration)
         REQUEST_COUNT.labels(method="GET", endpoint="/slow", http_status=status, app="flask-metrics-logger").inc()
     return response, status
+
+# Prometheus scrape endpoint - returns latest metrics
+@app.route("/metrics")
+def metrics():
+    return Response(generate_latest(), mimetype=CONTENT_TYPE_LATEST)
+
+
+# Run app
+if __name__ == "__main__":
+    # threaded=True allows handling multiple requests at once
+    app.run(host="0.0.0.0", port=PORT, debug=True, threaded=True)
