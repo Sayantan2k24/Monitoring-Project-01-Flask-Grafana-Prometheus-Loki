@@ -1,4 +1,4 @@
-# ✅ Use official Ubuntu base image
+# Use official Ubuntu base image
 FROM ubuntu:22.04
 
 # Set environment variables
@@ -8,7 +8,7 @@ ENV LOKI_DIR=/opt/loki \
 # Create working directory
 WORKDIR /opt/loki
 
-# 🧰 Install necessary packages: curl, wget, unzip
+# Install necessary packages: curl, wget, unzip
 RUN apt update && \
     apt install -y curl wget unzip && \
     rm -rf /var/lib/apt/lists/*
