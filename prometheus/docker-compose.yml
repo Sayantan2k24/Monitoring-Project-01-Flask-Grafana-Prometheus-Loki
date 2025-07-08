@@ -10,7 +10,7 @@ services:
     ports:
     - 9090:9090
     networks:
-      - monitoring_stack
+      - microservice_monitoring_stack
     volumes: 
     - ./prometheus.yml:/etc/prometheus/prometheus.yml
     restart: unless-stopped
