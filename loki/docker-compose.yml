@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  loki-server:
+    container_name: loki-server
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sayantan2k21/custom-loki-server:ubuntu-v1
+    ports:
+      - "3100:3100"
+    networks:
+      - microservice_monitoring_stack
+    volumes:
+      - ./loki-config.yaml:/etc/loki/config.yaml
+    restart: unless-stopped
+
+networks:
+  microservice_monitoring_stack:
+    external: true
