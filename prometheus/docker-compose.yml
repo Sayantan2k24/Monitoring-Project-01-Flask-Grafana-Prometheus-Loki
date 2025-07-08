@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  prom-server:
+    container_name: prometheus-server
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sayantan2k21/custom-prometheus-server:ubuntu-v1
+    ports:
+    - 9090:9090
+    networks:
+      - monitoring_stack
+    volumes: 
+    - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    restart: unless-stopped

@@ -1,0 +1,9 @@
+global:
+  scrape_interval: 4s
+
+scrape_configs:
+  - job_name: 'flask_app'
+    static_configs:
+      - targets: ["<Python_Flask_SERVER_ADDRESS>:<port>"]
+
+      
