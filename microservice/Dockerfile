@@ -10,12 +10,7 @@ WORKDIR /app
 COPY app.py requirements.txt util.py entrypoint.sh .  
 
 # Install dependencies
-RUN apt update -y && apt install -y curl &&  pip install --no-cache-dir -r requirements.txt
-
-# download the wait script
-RUN curl -o wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh && \
-    chmod +x wait-for-it.sh && \
-    chmod +x entrypoint.sh
+RUN apt update -y && apt install -y curl &&  pip install --no-cache-dir -r requirements.txt && chmod +x entrypoint.sh
 
 # Expose app port
 EXPOSE 5000 
