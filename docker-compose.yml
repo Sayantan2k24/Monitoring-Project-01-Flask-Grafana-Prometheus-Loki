@@ -13,7 +13,7 @@ services:
     build:
       context: ./microservice
       dockerfile: Dockerfile
-    image: sayantan2k21/flask-metrics-logger:v1
+    # image: sayantan2k21/flask-metrics-logger:v1
     ports:
       - "5000:5000"
     networks:
@@ -37,7 +37,7 @@ services:
     build:
       context: ./prometheus
       dockerfile: Dockerfile
-    image: sayantan2k21/custom-prometheus-server:v1
+    # image: sayantan2k21/custom-prometheus-server:v1
     ports:
       - "9090:9090"
     volumes:
@@ -57,7 +57,7 @@ services:
     build:
       context: ./grafana
       dockerfile: Dockerfile
-    image: sayantan2k21/custom-grafana-server:v1
+    # image: sayantan2k21/custom-grafana-server:v1
     ports:
       - "3000:3000"
     volumes:
@@ -74,7 +74,7 @@ services:
     build:
       context: ./loki
       dockerfile: Dockerfile
-    image: sayantan2k21/custom-loki-server:v1
+    # image: sayantan2k21/custom-loki-server:v1
     ports:
       - "3100:3100"
     networks:
@@ -91,7 +91,7 @@ services:
     build:
       context: ./blackbox_exporter
       dockerfile: Dockerfile
-    image: sayantan2k21/custom-blackbox-exporter:v1
+    # image: sayantan2k21/custom-blackbox-exporter:v1
     ports:
       - "9115:9115"
     volumes:
