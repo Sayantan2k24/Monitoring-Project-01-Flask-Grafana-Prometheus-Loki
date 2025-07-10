@@ -1,7 +1,23 @@
 #!/bin/bash
-
 # entrypoint.sh
-./wait-for-it.sh prometheus-server:9090 -- 
-./wait-for-it.sh loki-server:3100 -- 
-./wait-for-it.sh blackbox-exporter:9115 -- 
+
+# Wait for Prometheus /status endpoint
+until curl -sSf http://prometheus-server:9090/-/ready > /dev/null; do
+  echo "Waiting for Prometheus..."
+  sleep 2
+done
+
+# Wait for Loki
+until curl -sSf http://loki-server:3100/ready > /dev/null; do
+  echo "Waiting for Loki..."
+  sleep 2
+done
+
+# Wait for Blackbox Exporter (basic check)
+until curl -sSf http://blackbox-exporter:9115 > /dev/null; do
+  echo "Waiting for Blackbox Exporter..."
+  sleep 2
+done
+
+# Now run the Flask app
 python app.py
