@@ -7,16 +7,18 @@ LABEL maintainer="sayantan2k21"
 WORKDIR /app
 
 # Copy app util and requirements
-COPY app.py requirements.txt util.py .  
+COPY app.py requirements.txt util.py entrypoint.sh .  
 
 # Install dependencies
 RUN apt update -y && apt install -y curl &&  pip install --no-cache-dir -r requirements.txt
 
 # download the wait script
-RUN curl -o wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh && chmod +x wait-for-it.sh
+RUN curl -o wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh && \
+    chmod +x wait-for-it.sh && \
+    chmod +x entrypoint.sh
 
 # Expose app port
-EXPOSE 5000
+EXPOSE 5000 
 
 # Run the  Flask App
-CMD ["python", "app.py"]
+CMD ["./entrypoint.sh"]
