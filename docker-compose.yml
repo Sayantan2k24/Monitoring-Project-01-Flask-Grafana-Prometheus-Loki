@@ -14,6 +14,10 @@ services:
       context: ./microservice
       dockerfile: Dockerfile
     image: sayantan2k21/flask-metrics-logger:v1
+    command: ["./wait-for-it.sh", "prometheus-server:9090", "--",
+          "./wait-for-it.sh", "loki-server:3100", "--",
+          "./wait-for-it.sh", "blackbox-exporter:9115", "--",
+          "python", "app.py"]
     ports:
       - "5000:5000"
     networks:
