@@ -5,3 +5,24 @@ scrape_configs:
   - job_name: 'flask_metrics_logger'
     static_configs:
       - targets: ["flask-metrics-logger:5000"]
+
+
+# scrape metrics from blackbox_exporter
+
+  - job_name: "blackbox-flask-probe" # Job name for blackbox exporter
+    metrics_path: /probe             # Path for blackbox probe
+    params:
+      module: [http_2xx]             # Module to look for HTTP 200 response
+
+    static_configs:
+      - targets:
+        - http://flask-metrics-logger:5000/
+        - http://flask-metrics-logger:5000/slow
+
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox-exporter:9115  # container name of blackbox exporter # DNS # or URL can be used
