@@ -13,5 +13,5 @@ receivers:
     smarthost: smtp.gmail.com:587     # SMTP server
     auth_username: your_email-1         # SMTP auth username
     auth_identity: your_email-1         # SMTP auth identity
-    auth_password: "your-app-password"  # SMTP auth password
+    auth_password: "your-app-password"  # SMTP auth password # for email-1 #  Email Sender
     send_resolved: true               # Send notifications for resolved alerts
