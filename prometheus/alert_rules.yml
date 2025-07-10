@@ -1,0 +1,29 @@
+groups:
+- name: alert_rules   # Name of the alert rules group
+  rules:
+    - alert: HighLatency
+      expr: rate(app_request_latency_seconds_sum{endpoint="/slow"}[2m])  / rate(app_request_latency_seconds_count{endpoint="/slow"}[2m]) > 0.75 # custom metrics by flask app
+      for: 1m
+      labels:
+        severity: warning
+      annotations:
+        summary: "High Avg latency per second on /slow endpoint"
+        description: "Latency above threshold for over 2 minutes"
+
+    - alert: FlaskContainerDown
+      expr: up{instance="flask-metrics-logger:5000"} == 0      # Expression to detect app container down
+      for: 1m
+      labels:
+        severity: "critical"
+      annotations:
+        summary: "Endpoint {{ $labels.instance }} down"
+        description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minute."
+
+    - alert: WebsiteDown
+      expr: probe_success == 0        # Expression to detect website down # from blackbox exporter
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        description: The website at {{ $labels.instance }} is down.
+        summary: Website down
