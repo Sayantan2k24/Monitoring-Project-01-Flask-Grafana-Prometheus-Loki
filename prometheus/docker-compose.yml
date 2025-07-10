@@ -1,7 +1,7 @@
 version: "3.8"
 
 networks:
-  microservice_monitoring_stack:
+  monitoring-project-01_microservice_monitoring_stack:
     external: true
 
 services:
@@ -10,11 +10,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: sayantan2k21/custom-prometheus-server:ubuntu-v1
     ports:
     - 9090:9090
     networks:
-      - microservice_monitoring_stack
+      - monitoring-project-01_microservice_monitoring_stack
     volumes: 
     - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    - ./alert_rules.yml:/etc/prometheus/alert_rules.yml
     restart: unless-stopped
