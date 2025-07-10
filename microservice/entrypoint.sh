@@ -19,5 +19,12 @@ until curl -sSf http://blackbox-exporter:9115 > /dev/null; do
   sleep 2
 done
 
+# Wait for Grafana
+until curl -sSf http://grafana-server:3000/api/health; do
+  echo "Waiting for Grafana..."
+  sleep 2
+done
+
+
 # Now run the Flask app
 python app.py
