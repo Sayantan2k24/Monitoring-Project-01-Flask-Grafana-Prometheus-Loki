@@ -16,8 +16,9 @@ scrape_configs:
 
     static_configs:
       - targets:
-        - http://flask-metrics-logger:5000/
-        - http://flask-metrics-logger:5000/slow
+        - flask-metrics-logger:5000/health # just check the probes by hitting this endpoint and not the / and /slow
+        # otherwise it will give unnecessary spike in some metrics value like app_request_latency_seconds_sum was keep on increasing and showed big values like 245.99921298027039 seconds
+
 
     relabel_configs:
       - source_labels: [__address__]
