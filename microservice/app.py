@@ -94,6 +94,13 @@ def metrics():
     return Response(generate_latest(), mimetype=CONTENT_TYPE_LATEST)
 
 
+# no logging and metrics scraping needed for this endpoint by 
+# only for blackbox exporter to check the health
+@app.route("/health")
+def health():
+    return jsonify({"status": "Server is up!!"}), 200
+
+
 # Run app
 if __name__ == "__main__":
     # threaded=True allows handling multiple requests at once
