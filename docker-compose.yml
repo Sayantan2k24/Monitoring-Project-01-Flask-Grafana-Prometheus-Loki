@@ -15,9 +15,9 @@ services:
       dockerfile: Dockerfile
     image: sayantan2k21/flask-metrics-logger:v1
     command: ["./wait-for-it.sh", "prometheus-server:9090", "--",
-          "./wait-for-it.sh", "loki-server:3100", "--",
-          "./wait-for-it.sh", "blackbox-exporter:9115", "--",
-          "python", "app.py"]
+              "./wait-for-it.sh", "loki-server:3100", "--",
+              "./wait-for-it.sh", "blackbox-exporter:9115", "--",
+              "python", "app.py"]
     ports:
       - "5000:5000"
     networks:
@@ -27,9 +27,16 @@ services:
     restart: unless-stopped
     depends_on:
       - loki-server
-      - prom-server
+      - prometheus-server
+      - blackbox-exporter
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://flask-app:5000/metrics"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
 
-  prom-server:
+  prometheus-server:
     container_name: prometheus-server
     build:
       context: ./prometheus
@@ -42,6 +49,12 @@ services:
     networks:
       - microservice_monitoring_stack
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://prometheus-server:9090/-/healthy"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s    
 
   grafana-server:
     container_name: grafana-server
@@ -57,7 +70,7 @@ services:
       - microservice_monitoring_stack
     restart: unless-stopped
     depends_on:
-      - prom-server
+      - prometheus-server
       - loki-server
 
   loki-server:
@@ -71,3 +84,28 @@ services:
     networks:
       - microservice_monitoring_stack
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://loki-server:3100/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+  blackbox-exporter:
+    container_name: blackbox-exporter
+    build:
+      context: ./blackbox_exporter
+      dockerfile: Dockerfile
+    image: sayantan2k21/custom-blackbox-exporter:v1
+    ports:
+      - "9115:9115"
+    volumes:
+      - ./blackbox_exporter/blackbox.yml:/etc/blackbox_exporter/config.yml
+    networks:
+      - microservice_monitoring_stack
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://blackbox-exporter:9115/"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
