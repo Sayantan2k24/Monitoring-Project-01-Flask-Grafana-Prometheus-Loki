@@ -8,7 +8,7 @@ volumes:
   grafana_data:
 
 services:
-  flask-app:
+  flask-metrics-logger:
     container_name: flask-metrics-logger
     build:
       context: ./microservice
@@ -26,7 +26,7 @@ services:
       - prometheus-server
       - blackbox-exporter
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://flask-app:5000/metrics"]
+      test: ["CMD", "curl", "-f", "http://flask-metrics-logger:5000/metrics"]
       interval: 10s
       timeout: 5s
       retries: 3
