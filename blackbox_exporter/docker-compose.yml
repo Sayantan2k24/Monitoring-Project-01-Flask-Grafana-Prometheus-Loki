@@ -1,0 +1,20 @@
+version: "3.8"
+
+networks:
+  microservice_monitoring_stack:
+    external: true
+
+services:
+  blackbox-exporter:
+    container_name: blackbox-exporter
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sayantan2k21/custom-blackbox-exporter:ubuntu-v1
+    ports:
+      - "9115:9115"
+    volumes:
+      - ./blackbox.yml:/etc/blackbox_exporter/config.yml
+    networks:
+      - microservice_monitoring_stack
+    restart: unless-stopped
