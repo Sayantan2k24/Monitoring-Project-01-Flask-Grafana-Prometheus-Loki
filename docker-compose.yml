@@ -7,6 +7,9 @@ networks:
 volumes:
   grafana_data:
 
+################
+# Flask APP
+################
 services:
   flask-metrics-logger:
     container_name: flask-metrics-logger
@@ -32,6 +35,9 @@ services:
       retries: 3
       start_period: 5s
 
+################
+# Prometheus
+################
   prometheus-server:
     container_name: prometheus-server
     build:
@@ -41,7 +47,8 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml # config file
+      - ./prometheus/alert_rules.yml:/etc/prometheus/alert_rules.yml # alert rules file
     networks:
       - microservice_monitoring_stack
     restart: unless-stopped
@@ -51,7 +58,13 @@ services:
       timeout: 5s
       retries: 3
       start_period: 5s    
+    depends_on:
+      alertmanager:
+        condition: service_healthy
 
+################
+# Grafana
+################
   grafana-server:
     container_name: grafana-server
     build:
@@ -75,6 +88,9 @@ services:
       - prometheus-server
       - loki-server
 
+################
+# Loki
+################
   loki-server:
     container_name: loki-server
     build:
@@ -92,6 +108,10 @@ services:
       timeout: 5s
       retries: 3
       start_period: 5s
+
+################
+# Blackbox Exporter
+################     
   blackbox-exporter:
     container_name: blackbox-exporter
     build:
@@ -111,3 +131,25 @@ services:
       timeout: 5s
       retries: 3
       start_period: 5s
+
+################
+# Alert Manager
+################
+  alertmanager:
+    container_name: alertmanager
+    build:
+      context: ./alertmanager
+      dockerfile: Dockerfile
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    networks:
+      - microservice_monitoring_stack
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://alertmanager:9093/-/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
