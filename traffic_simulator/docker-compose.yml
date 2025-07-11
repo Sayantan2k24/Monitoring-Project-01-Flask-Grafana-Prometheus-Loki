@@ -1,0 +1,13 @@
+networks:
+  monitoring-project-01_microservice_monitoring_stack:
+    external: true
+
+services:
+  traffic-simulator:
+    container_name: traffic-simulator
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - monitoring-project-01_microservice_monitoring_stack # check the network name first by # docker network ls
+    restart: on-failure
