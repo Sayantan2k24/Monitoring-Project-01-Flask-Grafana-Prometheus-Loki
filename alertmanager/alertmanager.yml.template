@@ -6,12 +6,12 @@ route:
   receiver: 'email-notifications'     # Default receiver
 
 receivers:
-- name: 'email-notifications'         # Receiver name
+- name: 'email-notifications'           # Receiver name
   email_configs:
-  - to: you-email-2      # Email recipient
-    from: your_email-1             # Email sender
-    smarthost: smtp.gmail.com:587     # SMTP server
+  - to: you-email-2                     # Email recipient
+    from: your_email-1                  # Email sender
+    smarthost: smtp.gmail.com:587       # SMTP server
     auth_username: your_email-1         # SMTP auth username
     auth_identity: your_email-1         # SMTP auth identity
     auth_password: "your-app-password"  # SMTP auth password # for email-1 #  Email Sender
-    send_resolved: true               # Send notifications for resolved alerts
+    send_resolved: true                 # Send notifications for resolved alerts
