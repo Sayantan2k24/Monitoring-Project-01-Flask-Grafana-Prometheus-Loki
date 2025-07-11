@@ -146,6 +146,7 @@ services:
       - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
     networks:
       - microservice_monitoring_stack
+    restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://alertmanager:9093/-/ready"]
       interval: 10s
