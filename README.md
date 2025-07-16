@@ -2,6 +2,9 @@
 https://sayantansamanta098.medium.com/flask-server-monitoring-with-custom-prometheus-grafana-and-loki-docker-environment-239356759f6e
 
 
+## Dashboard will Look like this.
+<img width="1100" height="618" alt="image" src="https://github.com/user-attachments/assets/4b178d74-0817-49a0-ab91-f2edc992a6c5" />
+
 ## Project Architecture
 ```
 +--------------------------+
